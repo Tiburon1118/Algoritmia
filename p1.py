@@ -34,12 +34,6 @@ def dataprep_sum_pair_miss(n):
     """Genera un caso donde NO existe ningún par (Caso peor).
     Devuelve una tupla (lista, target)
     """
-    test = 0
-    while ( test==0 ):
-        lst = [random.randint(1, 100) for _ in range(n)]
-        target = [random.randint(1,200)]
-
-
     pass
 
 def dataprep_rle(n):
@@ -58,9 +52,9 @@ def find_duplicates(lst):
     for num in lst:
         if num in vistos:
             if num not in duplicados:
-                duplicados.append = (num)
+                duplicados.append(num)
         vistos.append(num)
-    return vistos    
+    return duplicados    
             
 
 # I.A.3 Búsqueda de par que suma target con complejidad O(n)
