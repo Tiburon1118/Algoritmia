@@ -38,6 +38,7 @@ def dataprep_sum_pair_hit(n):
         
     return(lst, target)
 
+
 def dataprep_sum_pair_miss(n):
     """Genera un caso donde NO existe ningún par (Caso peor).
     Devuelve una tupla (lista, target)
@@ -52,11 +53,6 @@ def dataprep_rle(n):
     """Genera una lista con rachas repetidas de dimensión n.
     Devuelve una lista.
     """
-    lst = [random.randint(1, 100) for _ in range(n)]
-
-    number = random.randint(0,n)
-    
-    
     pass
 
 # I.A.2 Búsqueda de duplicados manteniendo orden de aparición
@@ -64,7 +60,15 @@ def find_duplicates(lst):
     """Devuelve los elementos que aparecen más de una vez en lst,
     preservando el orden de su primera repetición y sin duplicados.
     """
-    pass
+    vistos = []
+    duplicados = []
+    for num in lst:
+        if num in vistos:
+            if num not in duplicados:
+                duplicados.append(num)
+        vistos.append(num)
+    return duplicados    
+            
 
 # I.A.3 Búsqueda de par que suma target con complejidad O(n)
 def has_sum_pair(par):
