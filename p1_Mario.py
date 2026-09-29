@@ -52,12 +52,18 @@ def dataprep_rle(n):
     """Genera una lista con rachas repetidas de dimensión n.
     Devuelve una lista.
     """
-    lst = [random.randint(1, 100) for _ in range(n)]
+    lst =[]
 
-    number = random.randint(0,n)
-    
-    
-    pass
+    while len(lst) < n:
+        elem = random.randint(1,100)
+
+        tam_racha = random.randint(2, 5)
+        
+        tam_racha = min(tam_racha, n - len(lst))
+        
+        lst.extend([elem] * tam_racha)
+        
+    return lst
 
 # I.A.2 Búsqueda de duplicados manteniendo orden de aparición
 def find_duplicates(lst):
