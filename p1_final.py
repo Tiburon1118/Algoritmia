@@ -28,10 +28,10 @@ def dataprep_sum_pair_hit(n):
     """Genera un caso donde SÍ existe un par que suma target.
     Devuelve una tupla (lista, target)
     """
-    n1 = random.randint(0,n)
-    n2 = random.randint(0,n)
+    n1 = random.randint(0,n-1)
+    n2 = random.randint(0,n-1)
     if(n1 == n2):
-        n2 = random.randint(1,n)
+        n2 = random.randint(1,n-1)
  
     lst = [random.randint(1, 100) for _ in range(n)]
     target = lst[n1] +lst[n2]
@@ -67,23 +67,35 @@ def find_duplicates(lst):
     """Devuelve los elementos que aparecen más de una vez en lst,
     preservando el orden de su primera repetición y sin duplicados.
     """
-    vistos = []
+    vistos = set()
+    añadidos = set()
     duplicados = []
+    
     for num in lst:
         if num in vistos:
-            if num not in duplicados:
+            if num not in añadidos:
                 duplicados.append(num)
-        vistos.append(num)
-    return duplicados    
+                añadidos.add(num)
+        else:
+            vistos.add(num)
             
+    return duplicados
 
-# I.A.3 Búsqueda de par que suma target con complejidad O(n)
+
 def has_sum_pair(par):
     """Dada una tupla (lst, target), devuelve True si existen dos elementos
     distintos en lst que sumen target; de lo contrario devuelve False.
     """
     lst, target = par
-    pass
+    vistos = set()
+    
+    for num in lst:
+        find = target - num
+        if find in vistos:
+            return True
+        vistos.add(num)
+        
+    return False
 
 # I.B.1 RLE Naive / Ingenuo
 def rle_encode_naive(lst):
@@ -137,3 +149,4 @@ def plot_single_curve(
         )  #
 
     plt.show()  # Muestra la figura
+
