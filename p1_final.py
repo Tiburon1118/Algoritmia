@@ -100,12 +100,38 @@ def has_sum_pair(par):
 # I.B.1 RLE Naive / Ingenuo
 def rle_encode_naive(lst):
     """Codificación RLE utilizando operador + concatenador de listas."""
-    pass
+    cod = []
+    count = 1
+    anterior = lst[0]
+
+    for num in lst[1:]:
+        
+        if num == anterior:
+            count +=1
+        else:
+            cod = cod + [(anterior, count)]
+            count = 1
+            anterior = num
+    cod = cod + [(anterior, count)]
+    return cod
 
 # I.B.2 RLE Optimized / Óptimo
 def rle_encode_optimized(lst):
     """Codificación RLE optimizada usando append in-place."""
-    pass
+    cod = []
+    count = 1
+    anterior = lst[0]
+
+    for num in lst[1:]:
+        
+        if num == anterior:
+            count +=1
+        else:
+            cod.append([anterior, count])
+            count = 1
+            anterior = num
+    cod.append([anterior, count])
+    return cod
 
 # Función auxiliar para generar una gráfica de una serie de datos.
 def plot_single_curve(
