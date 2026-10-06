@@ -1,7 +1,8 @@
 import time # Para la función time_measure. Entender código dado.
 import matplotlib.pyplot as plt # Para imprimir gráficas. Entender código dado.
 import random # Puede usarse random.randint(n, m) para generar listas aleatorias de enteros en las funciones dataprep.
-
+import numpy as np
+from typing import List, Dict
 # I.A.1 Medición de tiempos de ejecución
 def time_measure(f, dataprep, Nlist, Nrep=1000, Nstat=100):
     """Mide la media y varianza del tiempo de ejecución de la función f
@@ -155,7 +156,49 @@ def plot_single_curve(
 
     plt.show()  # Muestra la figura
 
-lst = dataprep_rle(10)
-resulrado = rle_encode_optimized(lst)
-print(lst)
-print(resulrado)
+def init_cd(n: int) ->  np.ndarray:
+
+    return np.full(n, -1, dtype=int)
+
+def find(ind: int, p_cd: np.ndarray)-> int:
+    
+    if p_cd[ind] < 0:
+        return ind
+    
+    p_cd[ind] = find(p_cd[ind], p_cd)
+    return p_cd[ind]
+
+
+def union(rep_1: int, rep_2: int, p_cd: np.ndarray)-> int:
+
+    x = find(rep_1, p_cd)
+    y = find(rep_2, p_cd)
+
+    if x == y:
+        return x
+    elif p_cd[x] < p_cd[y]:
+        p_cd[y] = x
+        
+        return x
+
+    elif p_cd[x] > p_cd[y]:
+        p_cd[x] = y
+        return y
+    else:
+        p_cd[x] = y
+        p_cd[y] -= 1
+        return y
+    
+def ccs(n: int, l: List)-> Dict:
+
+    p_cd = init_cd(n)
+    for a, b in l:
+        x = find(a, p_cd)
+        y = find(b, p_cd)
+
+        if(y != x):
+            union(x, y, p_cd)
+
+    d = cd_2_dict(p_cd)
+
+    return d
