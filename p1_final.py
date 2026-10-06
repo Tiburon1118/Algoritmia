@@ -216,7 +216,18 @@ def find(ind: int, p_cd: np.ndarray)-> int:
 #II.A.4 devuelve un diccionario cuyas claves sean los representantes de los subconjuntos del CD 
 # y donde el valor de la clave u del dict sea una lista con los miembros del subconjunto representado por u
 def cd_2_dict(p_cd: np.ndarray)-> Dict:
-    return
+    res = {}
+    n = len(p_cd)
+       
+    for i in range(n):
+        rep = find(i, p_cd)
+           
+        if rep not in res:
+            res[rep] = []
+               
+        res[rep].append(i)
+           
+    return res
 #II.B.1 devuelve las componentes conexas de un tal grafo
 def ccs(n: int, l: List)-> Dict:
 
