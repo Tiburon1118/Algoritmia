@@ -1,6 +1,8 @@
 import time # Para la función time_measure. Entender código dado.
 import matplotlib.pyplot as plt # Para imprimir gráficas. Entender código dado.
 import random # Puede usarse random.randint(n, m) para generar listas aleatorias de enteros en las funciones dataprep.
+import numpy as np #Sirve para poder usar los arrays
+from typing import List, Dict #Sirve para poder usar los List y Dict
 
 # I.A.1 Medición de tiempos de ejecución
 def time_measure(f, dataprep, Nlist, Nrep=1000, Nstat=100):
@@ -81,7 +83,7 @@ def find_duplicates(lst):
             
     return duplicados
 
-
+# I.A.3 evalúa si existen dos elementos en posiciones distintasde la lista lst cuya suma sea igual a target
 def has_sum_pair(par):
     """Dada una tupla (lst, target), devuelve True si existen dos elementos
     distintos en lst que sumen target; de lo contrario devuelve False.
@@ -176,3 +178,56 @@ def plot_single_curve(
 
     plt.show()  # Muestra la figura
 
+# II.A.1 devuelve un array con valores -1 en las posiciones {0, 1, ..., n-1}.
+def init_cd(n: int) ->  np.ndarray:
+
+    return np.full(n, -1, dtype=int)
+
+# II.A.2 devuelve el representante del conjunto obtenido como la unión por rangos de 
+# los representados por los índicesrep_1, rep_2 en el CD almacenado en el array p_cd.
+
+def union(rep_1: int, rep_2: int, p_cd: np.ndarray)-> int:
+
+    x = find(rep_1, p_cd)
+    y = find(rep_2, p_cd)
+
+    if x == y:
+        return x
+    elif p_cd[x] < p_cd[y]:
+        p_cd[y] = x
+        
+        return x
+
+    elif p_cd[x] > p_cd[y]:
+        p_cd[x] = y
+        return y
+    else:
+        p_cd[x] = y
+        p_cd[y] -= 1
+        return y
+# II.A.3 devuelve el representante del índice ind en el CD almacenado en p_cd realizando compresión de caminos.
+def find(ind: int, p_cd: np.ndarray)-> int:
+    
+    if p_cd[ind] < 0:
+        return ind
+    
+    p_cd[ind] = find(p_cd[ind], p_cd)
+    return p_cd[ind]
+#II.A.4 devuelve un diccionario cuyas claves sean los representantes de los subconjuntos del CD 
+# y donde el valor de la clave u del dict sea una lista con los miembros del subconjunto representado por u
+def cd_2_dict(p_cd: np.ndarray)-> Dict:
+    return
+#II.B.1 devuelve las componentes conexas de un tal grafo
+def ccs(n: int, l: List)-> Dict:
+
+    p_cd = init_cd(n)
+    for a, b in l:
+        x = find(a, p_cd)
+        y = find(b, p_cd)
+
+        if(y != x):
+            union(x, y, p_cd)
+
+    d = cd_2_dict(p_cd)
+
+    return d
