@@ -48,14 +48,8 @@ def dataprep_sum_pair_miss(n):
     """Genera un caso donde NO existe ningún par (Caso peor).
     Devuelve una tupla (lista, target)
     """
-    if n < 2:
-        n = 2 
-
     lst = [random.randint(1, 100) for _ in range(n)]
-   
-    n1, n2 = random.sample(range(n), 2)
-    target = lst[n1] + lst[n2]
-
+    target = 200 + n
     return (lst, target)
 
 def dataprep_rle(n):
