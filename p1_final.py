@@ -30,6 +30,9 @@ def dataprep_sum_pair_hit(n):
     """Genera un caso donde SÍ existe un par que suma target.
     Devuelve una tupla (lista, target)
     """
+    if n < 2:
+        n = 2
+        
     n1 = random.randint(0,n-1)
     n2 = random.randint(0,n-1)
     if(n1 == n2):
@@ -45,11 +48,15 @@ def dataprep_sum_pair_miss(n):
     """Genera un caso donde NO existe ningún par (Caso peor).
     Devuelve una tupla (lista, target)
     """
+    if n < 2:
+        n = 2 
 
     lst = [random.randint(1, 100) for _ in range(n)]
-    target = 200 + n
-    
-    return(lst, target)
+   
+    n1, n2 = random.sample(range(n), 2)
+    target = lst[n1] + lst[n2]
+
+    return (lst, target)
 
 def dataprep_rle(n):
     """Genera una lista con rachas repetidas de dimensión n.
@@ -117,12 +124,14 @@ def rle_encode_naive(lst):
             cod = cod + [(anterior, count)]
             count = 1
             anterior = num
-    cod.append((anterior, count))
+    cod = cod + [(anterior, count)]
     return cod
 
 # I.B.2 RLE Optimized / Óptimo
 def rle_encode_optimized(lst):
     """Codificación RLE optimizada usando append in-place."""
+    if not lst:
+        return []
     cod = []
     count = 1
     anterior = lst[0]
@@ -183,7 +192,8 @@ def plot_single_curve(
 
 # II.A.1 devuelve un array con valores -1 en las posiciones {0, 1, ..., n-1}.
 def init_cd(n: int) ->  np.ndarray:
-
+    if n <= 0:
+        return np.array([], dtype=int)
     return np.full(n, -1, dtype=int)
 
 # II.A.2 devuelve el representante del conjunto obtenido como la unión por rangos de 
@@ -233,11 +243,14 @@ def cd_2_dict(p_cd: np.ndarray)-> Dict:
     return res
 #II.B.1 devuelve las componentes conexas de un tal grafo
 def ccs(n: int, l: List)-> Dict:
-
+    if n <= 0:
+        return {}
+        
     p_cd = init_cd(n)
     for a, b in l:
-        x = find(a, p_cd)
-        y = find(b, p_cd)
+        if 0 <= a < n and 0 <= b < n:
+            x = find(a, p_cd)
+            y = find(b, p_cd)
 
         if(y != x):
             union(x, y, p_cd)
