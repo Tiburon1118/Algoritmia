@@ -102,6 +102,9 @@ def has_sum_pair(par):
 # I.B.1 RLE Naive / Ingenuo
 def rle_encode_naive(lst):
     """Codificación RLE utilizando operador + concatenador de listas."""
+    if not lst:
+        return[]
+    
     cod = []
     count = 1
     anterior = lst[0]
@@ -114,7 +117,7 @@ def rle_encode_naive(lst):
             cod = cod + [(anterior, count)]
             count = 1
             anterior = num
-    cod = cod + [(anterior, count)]
+    cod.append((anterior, count))
     return cod
 
 # I.B.2 RLE Optimized / Óptimo
@@ -129,10 +132,10 @@ def rle_encode_optimized(lst):
         if num == anterior:
             count +=1
         else:
-            cod.append([anterior, count])
+            cod.append((anterior, count))
             count = 1
             anterior = num
-    cod.append([anterior, count])
+    cod.append((anterior, count))
     return cod
 
 # Función auxiliar para generar una gráfica de una serie de datos.
