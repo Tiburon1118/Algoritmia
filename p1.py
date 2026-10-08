@@ -31,17 +31,14 @@ def dataprep_sum_pair_hit(n):
     Devuelve una tupla (lista, target)
     """
     if n < 2:
-        n = 2
-        
-    n1 = random.randint(0,n-1)
-    n2 = random.randint(0,n-1)
-    if(n1 == n2):
-        n2 = random.randint(1,n-1)
- 
+        n = 2 
+
     lst = [random.randint(1, 100) for _ in range(n)]
-    target = lst[n1] +lst[n2]
-        
-    return(lst, target)
+    
+    n1, n2 = random.sample(range(n), 2)
+    target = lst[n1] + lst[n2]
+
+    return (lst, target)
 
 
 def dataprep_sum_pair_miss(n):
@@ -49,7 +46,7 @@ def dataprep_sum_pair_miss(n):
     Devuelve una tupla (lista, target)
     """
     lst = [random.randint(1, 100) for _ in range(n)]
-    target = 200 + n
+    target = 205 + n
     return (lst, target)
 
 def dataprep_rle(n):
@@ -246,8 +243,8 @@ def ccs(n: int, l: List)-> Dict:
             x = find(a, p_cd)
             y = find(b, p_cd)
 
-        if(y != x):
-            union(x, y, p_cd)
+            if(y != x):
+                union(x, y, p_cd)
 
     d = cd_2_dict(p_cd)
 
