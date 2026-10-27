@@ -92,7 +92,18 @@ def activity_selection(activities: List[Tuple[str, int, int]]) -> List[Tuple[str
     Selecciona el máximo número posible de actividades compatibles.
     Ordena por tiempo de finalización ascendente, y en caso de empate por inicio e identificador.
     """
-    pass
+    order = sorted(activities, key= lambda x: x[2])
+
+    selecionadas = [order[0]]
+
+    u_hora = selecionadas[0][2]
+
+    for i in range(1,len(order)):
+        if order[i][1] >= u_hora:
+            selecionadas.append(order[i])
+            u_hora = order[i][2]
+    return selecionadas
+
 
 def generate_activities(n: int, seed: int = 42) -> List[Tuple[str, int, int]]:
     """
@@ -121,7 +132,28 @@ def job_scheduling(jobs: List[Tuple[str, int, int]]) -> Tuple[List[Optional[Tupl
     Planificación de tareas de duración unitaria con fecha límite (deadline).
     Devuelve la secuencia de tareas asignadas (con None para intervalos vacíos) y el beneficio total.
     """
-    pass
+
+    if not jobs :
+        return ([], 0)
+    
+    sorted_jobs = sorted(jobs, key=lambda x: (-x[1], x[2], x[0]))
+    
+    max_d = max(job[2] for job in jobs)
+    schedule = [None] *max_d
+
+    total_profit=0
+
+    for job in sorted_jobs:
+        job_id, profit, deadline = job
+
+        for slot in range(deadline - 1, -1, -1):
+            if schedule[slot] is None:
+                schedule[slot] = job        
+                total_profit += profit      
+                break                       
+
+    return (schedule,total_profit)
+
 
 def generate_jobs(n: int, seed: int = 42) -> List[Tuple[str, int, int]]:
     """
@@ -129,4 +161,3 @@ def generate_jobs(n: int, seed: int = 42) -> List[Tuple[str, int, int]]:
     profit en [1, 1000], deadline en [1, max(1, n // 10)].
     """
     pass
-
