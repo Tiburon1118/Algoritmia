@@ -32,7 +32,7 @@ def greedy_change(coins: List[int], amount: int) -> Tuple[List[int], int]:
 
     return (selected, remainder)
 
-def optimal_change(coins: List[int], amount: int) -> Optional[List[int]]:
+def optimal_change(coins: List[int], amount: int) -> List[int] | None:
     """
     Solución óptima mediante programación dinámica para el problema del cambio de monedas.
     Determina el menor número de monedas necesario para obtener la cantidad objetivo.
@@ -43,9 +43,7 @@ def optimal_change(coins: List[int], amount: int) -> Optional[List[int]]:
         return None
 
     D = {}
-    
- 
-    c = sorted(coins, reverse=True)
+    c = sorted(coins)
    
 
     for i in range(len(c) + 1):
@@ -79,7 +77,7 @@ def optimal_change(coins: List[int], amount: int) -> Optional[List[int]]:
         else:
             i -= 1 
     
-    return result
+    return sorted(result, reverse=True)
     
 
 def compare_change(coins: List[int], max_amount: int) -> Dict[str, List[int]]:
@@ -97,13 +95,14 @@ def compare_change(coins: List[int], max_amount: int) -> Dict[str, List[int]]:
     for amount in range(1, max_amount + 1):
         (greedy_coins, remainder) = greedy_change(coins, amount)
         opt_coins = optimal_change(coins, amount)
-        if opt_coins == None:
+        
+        if opt_coins is None:
             result["impossible"].append(amount)
         elif remainder > 0:
             result["greedy_failed"].append(amount)
-        elif remainder == 0 and len(greedy_coins) > len(opt_coins):
+        elif len(greedy_coins) > len(opt_coins):
             result["suboptimal"].append(amount)
-        elif remainder == 0 and len(greedy_coins) == len(opt_coins):
+        else:
             result["optimal"].append(amount)
     return result
 
@@ -157,26 +156,7 @@ def job_scheduling(jobs: List[Tuple[str, int, int]]) -> Tuple[List[Optional[Tupl
     Planificación de tareas de duración unitaria con fecha límite (deadline).
     Devuelve la secuencia de tareas asignadas (con None para intervalos vacíos) y el beneficio total.
     """
-    if not jobs :
-        return ([], 0)
-        
-    sorted_jobs = sorted(jobs, key=lambda x: (-x[1], x[2], x[0]))
-        
-    max_d = max(job[2] for job in jobs)
-    schedule = [None] *max_d
-    
-    total_profit=0
-    
-    for job in sorted_jobs:
-        job_id, profit, deadline = job
-    
-        for slot in range(deadline - 1, -1, -1):
-            if schedule[slot] is None:
-                schedule[slot] = job        
-                total_profit += profit      
-                break                       
-    
-    return (schedule,total_profit)
+    pass
 
 def generate_jobs(n: int, seed: int = 42) -> List[Tuple[str, int, int]]:
     """
@@ -195,3 +175,9 @@ def generate_jobs(n: int, seed: int = 42) -> List[Tuple[str, int, int]]:
         jobs.append((job_id, job_profit, job_deadline))
 
     return jobs
+
+
+
+A= [4, 3, 1]
+result = compare_change(A,500)
+print(result)

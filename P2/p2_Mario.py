@@ -1,5 +1,6 @@
 import numpy as np
-from typing import List, Dict, Tuple
+from typing import List, Tuple, Dict, Optional
+import random
 
 
     
@@ -10,8 +11,7 @@ Algoritmia y Estructuras de Datos Avanzadas.
 Curso 2026-27.
 """
 
-from typing import List, Tuple, Dict, Optional
-import random
+
 
 # =============================================================================
 # I. Problema del cambio de monedas
@@ -22,15 +22,7 @@ def greedy_change(coins: List[int], amount: int) -> Tuple[List[int], int]:
     Estrategia codiciosa para el problema del cambio de monedas.
     Selecciona en cada paso la moneda de mayor valor que no supere la cantidad restante.
     """
-    sorted_coins = sorted(coins, reverse=True)
-    selected = []
-    remainder = amount
-    for coin in sorted_coins:
-        while remainder >= coin:
-            selected.append(coin)
-            remainder -= coin
-
-    return (selected, remainder)
+    pass
 
 def optimal_change(coins: List[int], amount: int) -> Optional[List[int]]:
     """
