@@ -22,7 +22,15 @@ def greedy_change(coins: List[int], amount: int) -> Tuple[List[int], int]:
     Estrategia codiciosa para el problema del cambio de monedas.
     Selecciona en cada paso la moneda de mayor valor que no supere la cantidad restante.
     """
-    pass
+    sorted_coins = sorted(coins, reverse=True)
+    selected = []
+    remainder = amount
+    for coin in sorted_coins:
+        while remainder >= coin:
+            selected.append(coin)
+            remainder -= coin
+
+    return (selected, remainder)
 
 def optimal_change(coins: List[int], amount: int) -> Optional[List[int]]:
     """
@@ -109,7 +117,19 @@ def generate_activities(n: int, seed: int = 42) -> List[Tuple[str, int, int]]:
     Genera n actividades aleatorias reproducibles.
     start en [0, 10000], duration en [1, 100], end = start + duration.
     """
-    pass
+    random.seed(seed)
+
+    activities=[]
+
+    for i in range(n):
+        act_id = f"A{i}"
+        act_start = random.randint(0, 10000)
+        act_duration = random.randint(1, 100)
+        act_end = act_start + act_duration
+        activities.append((act_id, act_start, act_end))
+
+    return activities
+    
 
 # =============================================================================
 # III. Planificación de tareas con fechas límite
@@ -127,9 +147,15 @@ def generate_jobs(n: int, seed: int = 42) -> List[Tuple[str, int, int]]:
     Genera n tareas aleatorias con fecha límite reproducibles.
     profit en [1, 1000], deadline en [1, max(1, n // 10)].
     """
-    pass
 
+    random.seed(seed)
 
-activities = [("C", 0, 6), ("E", 8, 9), ("A", 1, 4), ("D", 5, 7), ("B", 3, 5), ("F", 5, 9)]
-test= activity_selection(activities)
-print(test)
+    jobs=[]
+
+    for i in range(n):
+        job_id = chr(65+i)
+        job_profit = random.randint(1, 10000)
+        job_deadline = random.randint(1, max(1, job_profit//10))
+        jobs.append((job_id, job_profit, job_deadline))
+
+    return jobs
