@@ -178,6 +178,6 @@ def generate_jobs(n: int, seed: int = 42) -> List[Tuple[str, int, int]]:
 
 
 
-A= [4, 3, 1]
+A= [25, 10, 4, 1]
 result = compare_change(A,500)
 print(result)
