@@ -116,7 +116,7 @@ def activity_selection(activities: List[Tuple[str, int, int]]) -> List[Tuple[str
     Ordena por tiempo de finalización ascendente, y en caso de empate por inicio e identificador.
     """
 
-    order = sorted(activities, key= lambda x: x[2])
+    order = sorted(activities, key=lambda x: (x[2], x[1], x[0]))
 
     selecionadas = [order[0]]
 
@@ -182,15 +182,14 @@ def generate_jobs(n: int, seed: int = 42) -> List[Tuple[str, int, int]]:
     Genera n tareas aleatorias con fecha límite reproducibles.
     profit en [1, 1000], deadline en [1, max(1, n // 10)].
     """
-
     random.seed(seed)
-
-    jobs=[]
+    jobs = []
+    max_d = max(1, n // 10)
 
     for i in range(n):
-        job_id = chr(65+i)
-        job_profit = random.randint(1, 10000)
-        job_deadline = random.randint(1, max(1, job_profit//10))
+        job_id = f"J{i}"
+        job_profit = random.randint(1, 1000)
+        job_deadline = random.randint(1, max_d)
         jobs.append((job_id, job_profit, job_deadline))
 
     return jobs
