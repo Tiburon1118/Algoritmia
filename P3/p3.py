@@ -25,7 +25,33 @@ def needleman_wunsch_matrix(seq1: str, seq2: str, match: int = 2, mismatch: int 
     :param gap: Penalización por introducción de hueco (gap).
     :return: Matriz de programación dinámica (lista de listas de enteros).
     """
-    pass
+    filas = len(seq2) + 1
+    cols = len(seq1) + 1
+
+    """Inicializamos la  matriz a 0"""
+    matriz = [[0 for _ in range(cols)] for _ in range(filas)]
+
+    """inicializamod la columna y fila vacia"""
+    for j in range(1, cols):
+        matriz[0][j] = j * gap
+    for i in range(1, filas):
+        matriz[i][0] = i * gap
+
+    """rellenamos el resto de la matriz"""
+    for i in range(1, filas):
+        for j in range(1, cols):
+            if seq2[i - 1] == seq1[j - 1]:
+                score = match
+            else:
+                score = mismatch
+
+            diagonal = matriz[i - 1][j - 1] + score
+            arriba = matriz[i - 1][j] + gap
+            izquierda = matriz[i][j - 1] + gap
+
+            matriz[i][j] = max(diagonal, arriba, izquierda)
+
+    return matriz
 
 def needleman_wunsch_backtracking(matrix: list[list[int]], seq1: str, seq2: str, match: int = 2, mismatch: int = -1, gap: int = -1) -> tuple[str, str, int]:
     """
@@ -65,7 +91,28 @@ def smith_waterman_matrix(seq1: str, seq2: str, match: int = 2, mismatch: int = 
     :param gap: Penalización por hueco.
     :return: Matriz de programación dinámica local (lista de listas de enteros).
     """
-    pass
+    filas = len(seq2) + 1
+    cols = len(seq1) + 1
+
+    """Inicializamos la  matriz a 0"""
+    matriz = [[0 for _ in range(cols)] for _ in range(filas)]
+
+
+    """rellenamos el resto de la matriz"""
+    for i in range(1, filas):
+        for j in range(1, cols):
+            if seq2[i - 1] == seq1[j - 1]:
+                score = match
+            else:
+                score = mismatch
+
+            diagonal = matriz[i - 1][j - 1] + score
+            arriba = matriz[i - 1][j] + gap
+            izquierda = matriz[i][j - 1] + gap
+
+            matriz[i][j] = max(diagonal, arriba, izquierda, 0)
+
+    return matriz
 
 def smith_waterman_backtracking(matrix: list[list[int]], seq1: str, seq2: str, match: int = 2, mismatch: int = -1, gap: int = -1) -> tuple[str, str, int]:
     """
