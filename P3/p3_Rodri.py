@@ -28,23 +28,38 @@ def needleman_wunsch_matrix(seq1: str, seq2: str, match: int = 2, mismatch: int 
     pass
 
 def needleman_wunsch_backtracking(matrix: list[list[int]], seq1: str, seq2: str, match: int = 2, mismatch: int = -1, gap: int = -1) -> tuple[str, str, int]:
-    """
-    Reconstruye las secuencias alineadas globalmente y calcula el score total a partir 
-    de la matriz de programación dinámica de Needleman-Wunsch mediante backtracking.
+    i = len(seq2)
+    j = len(seq1)
+    total_score = matrix[i][j]
 
-    El backtracking comienza en la esquina inferior derecha (len(seq2), len(seq1)) y 
-    recorre la matriz hasta la esquina superior izquierda (0, 0). 
-    En la estructura de la matriz, seq1 se desarrolla en columnas y seq2 en filas.
+    aligned_1 = []
+    aligned_2 = []
 
-    :param matrix: Matriz de programación dinámica previamente calculada.
-    :param seq1: Primera secuencia original (desarrollada en columnas).
-    :param seq2: Segunda secuencia original (desarrollada en filas).
-    :param match: Puntuación acordada para una coincidencia.
-    :param mismatch: Penalización por diferencia.
-    :param gap: Penalización por hueco.
-    :return: Tupla con (aligned_seq1, aligned_seq2, total_score).
-    """
-    pass
+    while i > 0 or j > 0:
+        current_val = matrix[i][j]
+
+        if i > 0 and j > 0:
+            score_diag = match if seq1[j - 1] == seq2[i - 1] else mismatch
+            if current_val == matrix[i - 1][j - 1] + score_diag:
+                aligned_1.append(seq1[j - 1])
+                aligned_2.append(seq2[i - 1])
+                i -= 1
+                j -= 1
+                continue
+
+        if i > 0 and current_val == matrix[i - 1][j] + gap:
+            aligned_1.append("-")
+            aligned_2.append(seq2[i - 1])
+            i -= 1
+            continue
+
+        if j > 0 and current_val == matrix[i][j - 1] + gap:
+            aligned_1.append(seq1[j - 1])
+            aligned_2.append("-")
+            j -= 1
+            continue
+
+    return "".join(reversed(aligned_1)), "".join(reversed(aligned_2)), total_score
 
 # I.B Alineamiento Local: Smith-Waterman
 
@@ -68,23 +83,46 @@ def smith_waterman_matrix(seq1: str, seq2: str, match: int = 2, mismatch: int = 
     pass
 
 def smith_waterman_backtracking(matrix: list[list[int]], seq1: str, seq2: str, match: int = 2, mismatch: int = -1, gap: int = -1) -> tuple[str, str, int]:
-    """
-    Reconstruye el alineamiento local óptimo y su puntuación a partir de la matriz 
-    de Smith-Waterman mediante backtracking.
+    rows = len(seq2) + 1
+    cols = len(seq1) + 1
 
-    Localiza el valor máximo global en la matriz y realiza el backtracking hasta 
-    alcanzar una celda con valor 0. En la matriz, seq1 se desarrolla en columnas 
-    y seq2 en filas.
+    # Localizar el primer máximo global recorriendo la matriz en orden de construcción
+    max_score = 0
+    max_i, max_j = 0, 0
+    for r in range(rows):
+        for c in range(cols):
+            if matrix[r][c] > max_score:
+                max_score = matrix[r][c]
+                max_i, max_j = r, c
 
-    :param matrix: Matriz de programación dinámica local previamente calculada.
-    :param seq1: Primera secuencia original (desarrollada en columnas).
-    :param seq2: Segunda secuencia original (desarrollada en filas).
-    :param match: Puntuación por coincidencia.
-    :param mismatch: Penalización por diferencia.
-    :param gap: Penalización por hueco.
-    :return: Tupla con (sub_seq1, sub_seq2, max_score).
-    """
-    pass
+    i, j = max_i, max_j
+    sub_1 = []
+    sub_2 = []
+
+    while i > 0 and j > 0 and matrix[i][j] > 0:
+        current_val = matrix[i][j]
+
+        score_diag = match if seq1[j - 1] == seq2[i - 1] else mismatch
+        if current_val == matrix[i - 1][j - 1] + score_diag:
+            sub_1.append(seq1[j - 1])
+            sub_2.append(seq2[i - 1])
+            i -= 1
+            j -= 1
+            continue
+
+        if current_val == matrix[i - 1][j] + gap:
+            sub_1.append("-")
+            sub_2.append(seq2[i - 1])
+            i -= 1
+            continue
+
+        if current_val == matrix[i][j - 1] + gap:
+            sub_1.append(seq1[j - 1])
+            sub_2.append("-")
+            j -= 1
+            continue
+
+    return "".join(reversed(sub_1)), "".join(reversed(sub_2)), max_score
 
 # =============================================================================
 # II. Optimización de Rutas en una Cuadrícula
@@ -93,16 +131,20 @@ def smith_waterman_backtracking(matrix: list[list[int]], seq1: str, seq2: str, m
 # II.A Recursividad Ingenua (Enfoque de Fuerza Bruta)
 
 def min_path_recursive(grid: list[list[int]], i: int, j: int) -> int:
-    """
-    Calcula el coste mínimo para alcanzar la celda (i, j) desde el origen (0, 0) 
-    utilizando una estrategia recursiva pura (fuerza bruta sin memoización).
 
-    :param grid: Matriz rectangular de costes numéricos enteros.
-    :param i: Índice de la fila de la celda destino.
-    :param j: Índice de la columna de la celda destino.
-    :return: Coste acumulado mínimo para llegar a la celda (i, j).
-    """
-    pass
+    if i == 0 and j == 0:
+        return grid[0][0]
+    
+    if i == 0:
+        return grid[0][j] + min_path_recursive(grid, 0, j - 1)
+    
+    if j == 0:
+        return grid[i][0] + min_path_recursive(grid, i - 1, 0)
+    
+    return grid[i][j] + min(
+        min_path_recursive(grid, i - 1, j),
+        min_path_recursive(grid, i, j - 1)
+    )
 
 # II.B Programación Dinámica (Enfoque Bottom-Up)
 
