@@ -183,13 +183,13 @@ def generate_jobs(n: int, seed: int = 42) -> List[Tuple[str, int, int]]:
     profit en [1, 1000], deadline en [1, max(1, n // 10)].
     """
     random.seed(seed)
-    jobs = []
-    max_d = max(1, n // 10)
+
+    jobs=[]
 
     for i in range(n):
-        job_id = f"J{i}"
-        job_profit = random.randint(1, 1000)
-        job_deadline = random.randint(1, max_d)
+        job_id = chr(65+i)
+        job_profit = random.randint(1, 10000)
+        job_deadline = random.randint(1, max(1, job_profit//10))
         jobs.append((job_id, job_profit, job_deadline))
 
     return jobs
