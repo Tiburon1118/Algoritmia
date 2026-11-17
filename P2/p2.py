@@ -156,7 +156,7 @@ def job_scheduling(jobs: List[Tuple[str, int, int]]) -> Tuple[List[Optional[Tupl
     Planificación de tareas de duración unitaria con fecha límite (deadline).
     Devuelve la secuencia de tareas asignadas (con None para intervalos vacíos) y el beneficio total.
     """
-       if not jobs :
+    if not jobs :
         return ([], 0)
     
     sorted_jobs = sorted(jobs, key=lambda x: (-x[1], x[2], x[0]))
@@ -193,3 +193,6 @@ def generate_jobs(n: int, seed: int = 42) -> List[Tuple[str, int, int]]:
         jobs.append((job_id, job_profit, job_deadline))
 
     return jobs
+
+test = job_scheduling(generate_jobs(6,42))
+print(test)
