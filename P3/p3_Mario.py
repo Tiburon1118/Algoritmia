@@ -161,7 +161,27 @@ def min_path_dp(grid: list[list[int]]) -> tuple[int, list[list[int]]]:
     :param grid: Matriz de costes de dimensiones N x M.
     :return: Tupla con el coste mínimo global (int) y la matriz dp de costes acumulados.
     """
-    pass
+
+    filas = len(grid)
+    colum = len(grid[0])
+
+    dp = [[0.0] * colum for _ in range(filas)]
+
+    for i in range(filas):
+        for j in range(colum):
+
+            if i==0 and j==0:
+                dp[i][j] = grid[i][j]
+            elif i== 0:
+                dp[i][j] = dp[i][j-1] + grid[i][j]
+            elif j==0:
+                dp[i][j] = dp[i-1][j] + grid[i][j]
+            else:
+                dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1])
+
+    min = dp[filas-1][colum-1]
+
+    return min , dp
 
 # II.C Reconstrucción de la Ruta Óptima
 
@@ -217,7 +237,28 @@ def simulate_particle_with_barrier(steps: int, max_radius: float) -> bool:
     :param max_radius: Radio límite de la barrera desde el origen.
     :return: True si la partícula cruza la barrera en algún paso, False en caso contrario.
     """
-    pass
+
+    if steps <= 0 and max_radius == 0:
+        return False
+
+    if steps == 0:
+        return False
+
+    radius = 0
+    x = 0
+    y = 0
+
+    for i in range(steps):
+        theta = random.uniform(0, 2*math.pi)
+        x += math.cos(theta)
+        y += math.sin(theta)
+
+        radius = math.sqrt(x**2 + y**2)
+
+        if radius > max_radius:
+            return True
+
+    return False
 
 def calculate_escape_probability(num_particles: int, num_steps: int, max_radius: float) -> float:
     """
@@ -229,4 +270,16 @@ def calculate_escape_probability(num_particles: int, num_steps: int, max_radius:
     :param max_radius: Radio de la barrera absorbente.
     :return: Probabilidad de escape expresada en el intervalo [0.0, 1.0].
     """
-    pass
+    i = 0
+    total = 0
+
+    while i < num_particles:
+        res = simulate_particle_with_barrier(num_steps, max_radius)
+
+        if res == 1:
+            total += 1
+        i += 1
+
+    prob = (total/ num_particles)
+
+    return prob
