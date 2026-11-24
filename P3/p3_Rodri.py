@@ -159,18 +159,33 @@ def min_path_dp(grid: list[list[int]]) -> tuple[int, list[list[int]]]:
     pass
 
 # II.C Reconstrucción de la Ruta Óptima
-
 def get_optimal_path(grid: list[list[int]]) -> tuple[int, list[tuple[int, int]]]:
-    """
-    Reconstruye la secuencia exacta de coordenadas (0, 0) ... (N-1, M-1) que forman 
-    el camino de coste mínimo en la cuadrícula.
-
-    Invoca internamente a min_path_dp(grid) para generar la matriz de costes acumulados.
-
-    :param grid: Matriz original de costes.
-    :return: Tupla con el coste total mínimo y la lista de coordenadas (i, j) de la ruta.
-    """
-    pass
+    min_cost, dp = min_path_dp(grid)
+    
+    n = len(grid)
+    m = len(grid[0])
+    
+    i = n - 1
+    j = m - 1
+    path = []
+    
+    while i > 0 or j > 0:
+        path.append((i, j))
+        
+        if i == 0:
+            j -= 1
+        elif j == 0:
+            i -= 1
+        else:
+            if dp[i - 1][j] < dp[i][j - 1]:
+                i -= 1
+            else:
+                j -= 1
+                
+    path.append((0, 0))
+    path.reverse()
+    
+    return min_cost, path
 
 # =============================================================================
 # III. Simulación de Movimiento y Difusión mediante Caminata Aleatoria (Random Walk)
@@ -179,27 +194,30 @@ def get_optimal_path(grid: list[list[int]]) -> tuple[int, list[tuple[int, int]]]
 # III.A El comportamiento de una partícula individual
 
 def simulate_single_walk(steps: int) -> tuple[float, float, float]:
-    """
-    Simula la trayectoria bidimensional de una sola partícula que parte desde el origen (0.0, 0.0) 
-    y da un número determinado de pasos en direcciones aleatorias uniformes [0, 2*pi).
+    if steps == 0:
+        return (0.0, 0.0, 0.0)
 
-    :param steps: Número de pasos a simular.
-    :return: Tupla con la posición final (x, y) y la distancia euclidiana final al origen.
-    """
-    pass
+    x = 0.0
+    y = 0.0
+
+    for _ in range(steps):
+        theta = random.uniform(0, 2 * math.pi)
+        x += math.cos(theta)
+        y += math.sin(theta)
+
+    distance = math.hypot(x, y)
+    return (x, y, distance)
 
 # III.B El enfoque de Monte Carlo y la Ley de Difusión
 
 def monte_carlo_diffusion_simulation(num_particles: int, num_steps: int) -> float:
-    """
-    Aplica el método de Monte Carlo simulando un conjunto masivo de partículas independientes 
-    para calcular la Distancia Cuadrática Media (R^2).
+    total_sq_dist = 0.0
 
-    :param num_particles: Número total de partículas independientes a simular.
-    :param num_steps: Número de pasos por caminata.
-    :return: Valor de la Distancia Cuadrática Media (R^2).
-    """
-    pass
+    for _ in range(num_particles):
+        _, _, dist = simulate_single_walk(num_steps)
+        total_sq_dist += dist ** 2
+
+    return total_sq_dist / num_particles
 
 # III.C Confinamiento y barreras absorbentes
 
